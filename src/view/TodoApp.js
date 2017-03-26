@@ -4,24 +4,21 @@ import TodoInput from './TodoInput';
 import TodoNewList from './TodoNewList';
 import TodoAction from '../action/TodoAction';
 import TodoStore from '../store/TodoStore';
+import TodoHeaderContainer from './TodoHeaderContainer';
 
 class TodoApp extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      todos:TodoStore.getTodos()
+      todos:TodoStore.getState()
     }
   }
 
   render() {
     const {todos} = this.state;
-    let todoCount = todos.filter((todo)=>{
-      return !todo.checked;
-    }).length;
-
     return (
       <div>
-        <TodoHeader name="老虎" count={todoCount} />
+        <TodoHeaderContainer />
         <TodoInput
           onKeyDown={(e)=>{
             if (e.keyCode===13) {
@@ -46,9 +43,9 @@ class TodoApp extends Component {
   }
 
   componentDidMount() {
-    this.addObserve = TodoStore.addObserve(()=>{
+    this.addObserve = TodoStore.addListener(()=>{
       this.setState({
-        todos: TodoStore.getTodos()
+        todos: TodoStore.getState()
       });
     });
     TodoAction.loadData();

@@ -1,82 +1,75 @@
 import TodoConstant from '../constants/TodoConstant';
 import TodoDispatcher from '../dispatcher/TodoDispatcher';
-import EventEmitter from 'events';
+import {ReduceStore} from 'flux/utils';
 
-const TODOS_CHANGE='todo_changes';
-const _emitter = new EventEmitter();
 
 let _boxChange = (todos,id)=>{
-  let target = todos.find((todo)=>{
+  let newTodos = [...todos];
+  let target = newTodos.find((todo)=>{
     return (todo.id===id);
   });
   target.checked = !target.checked;
-  return todos;
+  return newTodos;
 }
 
 let _deleteItem = (todos, id)=>{
-  let idx=todos.findIndex((todo)=>{
+  let newTodos = [...todos];
+
+  let idx=newTodos.findIndex((todo)=>{
     return (todo.id===id);
   });
-  todos.splice(idx, 1);
-  return todos;
+  newTodos.splice(idx, 1);
+  return newTodos;
 }
 
 let _addItems = (todos, value)=>{
-  let id = todos.length===0 ? 100 : (todos[todos.length-1].id + 1);
+  let newTodos = [...todos];
+  let id = newTodos.length===0 ? 100 : (newTodos[newTodos.length-1].id + 1);
   let item ={
     title:value,
     id:id,
     checked:false
   }
-  todos.push(item);
-  return todos;
+  newTodos.push(item);
+  return newTodos;
 }
 
 let _editItem=(todos, id, value)=>{
-  let target = todos.find((todo)=>{
+  let newTodos = [...todos];
+  let target = newTodos.find((todo)=>{
     return (todo.id===id);
   });
   console.log(value);
   console.log(target);
   target.title=value;
-  return todos;
+  return newTodos;
 }
 
-let todos = [];
 // 1.存储数据
 // 2.View 获取数据必须来TodoStore
 
-let TodoStore = {
-  getTodos() {
-    return todos;
-  },
-  addObserve(callBack) {
-    _emitter.on(TODOS_CHANGE, callBack);
-    return ()=>_emitter.removeListener(TODOS_CHANGE, callBack);
-  },
-  _dispatchToken: TodoDispatcher.register((action)=>{
-    console.log(action);
+class TodoStore extends ReduceStore {
+  getInitialState() {
+    return [];
+  }
+
+  reduce(todos, action) {
     switch (action.type) {
       case TodoConstant.TOGGLEITEM:
-          _boxChange( todos,action.id);
-          break;
+          return _boxChange( todos,action.id);
       case TodoConstant.EDITITEM:
-          _editItem( todos,action.id, action.title);
-          break;
+          return _editItem( todos,action.id, action.title);
       case TodoConstant.DELETEITEM:
-         _deleteItem( todos,action.id);
-         break;
+         return _deleteItem( todos,action.id);
       case TodoConstant.LOADDATA:
-         todos = action.todos;
-         break;
+         return todos = action.todos;
       case  TodoConstant.CREATEITEM:
-         _addItems( todos, action.title);
-         break;
+         return _addItems( todos, action.title);
       default:
+         return todos;
         break;
     }
-    _emitter.emit(TODOS_CHANGE);
-  })
+  }
 }
 
-module.exports = TodoStore;
+module.exports = new TodoStore(TodoDispatcher);
