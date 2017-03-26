@@ -3,7 +3,7 @@ import TodoHeader from './TodoHeader';
 import TodoInput from './TodoInput';
 import TodoNewList from './TodoNewList';
 
-let _boxChange=(todos ,id)=>{
+let _boxChange = (todos,id)=>{
   let target = todos.find((todo)=>{
     return (todo.id===id);
   });
@@ -11,7 +11,7 @@ let _boxChange=(todos ,id)=>{
   return todos;
 }
 
-let _deleteItem=(todos, id)=>{
+let _deleteItem = (todos, id)=>{
   let idx=todos.findIndex((todo)=>{
     return (todo.id===id);
   });
@@ -19,8 +19,8 @@ let _deleteItem=(todos, id)=>{
   return todos;
 }
 
-let _addItems=(todos, value)=>{
-  let id = todos.length?(100+todos.length):100;
+let _addItems = (todos, value)=>{
+  let id = todos.length===0 ? 100 : (todos[todos.length-1].id + 1);
   let item ={
     title:value,
     id:id,
@@ -45,23 +45,7 @@ class TodoApp extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      todos:[
-        {
-          id: 100,
-          title: "腻点食",
-          checked: false
-        },
-        {
-          id: 101,
-          title:"找个窝",
-          checked: false
-        },
-        {
-          id: 102,
-          title: '睡个觉',
-          checked:true
-        }
-      ]
+      todos:[]
     }
   }
 
@@ -104,5 +88,17 @@ class TodoApp extends Component {
     )
   }
 
+  componentDidMount() {
+    fetch("todo.json")
+    .then((data)=>{
+      console.log(data.json());
+      return data.json();
+    })
+    .then((todos)=>{
+      console.log(todos);
+      this.setState({todos});
+    })
+  }
+
 }
-module.exports=TodoApp;
+module.exports = TodoApp;

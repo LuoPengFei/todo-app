@@ -3,9 +3,7 @@ import ReactDOM from 'react-dom';
 import TodoApp from './TodoApp';
 
 ReactDOM.render(
-  <div>
-    <TodoApp />
-  </div>
+  <TodoApp />
   ,
   document.getElementById('root')
 );
