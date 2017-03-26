@@ -1,4 +1,4 @@
-import TodoDispatcher form '../dispatcher/TodoDispatcher';
+import TodoDispatcher from '../dispatcher/TodoDispatcher';
 import TodoConstant from '../constants/TodoConstant';
 
 let TodoAction = {

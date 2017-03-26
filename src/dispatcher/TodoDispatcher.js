@@ -1,4 +1,4 @@
-import { Dispatcher } from 'flux';
+import {Dispatcher} from 'flux';
 
 let TodoDispatcher = new Dispatcher();
 

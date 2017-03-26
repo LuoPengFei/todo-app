@@ -50,7 +50,7 @@ let TodoStore = {
   getTodos() {
     return todos;
   },
-  addObserer(callBack) {
+  addObserve(callBack) {
     _emitter.on(TODOS_CHANGE, callBack);
     return ()=>_emitter.removeListener(TODOS_CHANGE, callBack);
   },
@@ -70,7 +70,7 @@ let TodoStore = {
          todos = action.todos;
          break;
       case  TodoConstant.CREATEITEM:
-         _addItems( todos, title);
+         _addItems( todos, action.title);
          break;
       default:
         break;
