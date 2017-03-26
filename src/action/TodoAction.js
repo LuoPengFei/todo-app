@@ -40,7 +40,8 @@ let TodoAction = {
         todos,
         type: TodoConstant.LOADDATA
       });
-      // this.setState({todos});
     })
   }
 }
+
+module.exports = TodoAction;
